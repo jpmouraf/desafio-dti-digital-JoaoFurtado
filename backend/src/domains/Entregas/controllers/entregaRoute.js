@@ -1,5 +1,7 @@
 import { Router } from "express";
-import { createDelivery, finishDelivery } from "../service/entregaService.js";
+import { createDelivery, finishDelivery, getDeliveryRoute } from "../../Entregas/service/entregaService.js";
+import { drones, deliveries, orders } from "../../../db.js";
+import { allocateOrders } from "../../Drones/service/droneService.js";
 
 const router = Router();
 
@@ -12,6 +14,8 @@ router.post("/create/:droneId", async (req, res) => {
   if (allocated.length === 0) return res.status(400).json({ erro: "Nenhum pedido alocado" });
 
   const delivery = await createDelivery(drone, allocated);
+  if (!delivery) return res.status(400).json({ erro: "Pedidos excedem limite de distância do drone" });
+
   res.status(201).json(delivery);
 });
 
@@ -25,5 +29,7 @@ router.post("/finish/:deliveryId", async (req, res) => {
 
   res.json(result);
 });
+
+router.get("/:id/rota", getDeliveryRoute);
 
 export default router;

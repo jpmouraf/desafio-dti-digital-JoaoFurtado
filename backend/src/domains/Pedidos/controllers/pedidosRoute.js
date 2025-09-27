@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createOrder, listOrders } from "../services/coreService.js";
+import { createOrder, listOrders } from "../service/pedidosService.js";
 
 const router = Router();
 
