@@ -7,7 +7,7 @@ A aplicação permite:
 - Cadastrar drones (com limite de peso e distância).  
 - Alocar pedidos a drones e criar entregas.  
 - Finalizar entregas, alterando o status de pedidos e drones.  
-- Gerar relatórios consolidados de entregas e distância percorrida.  
+- Gerar relatórios de entregas e distância percorrida.  
 
 A solução é composta por:  
 - **Backend** em Node.js com Express.  
@@ -52,3 +52,10 @@ Em um terminal:
 
 cd backend
 npm test
+
+## Outras informações
+
+- O sistema funciona 100% localmente.
+- O backend libera CORS para permitir que o frontend se conecte sem problemas.
+- Como os dados ficam em memória, ao reiniciar o servidor os cadastros são perdidos.
+- Foi utilizado IA para debugs no backend e para o aprimoramento do design e das funcionalidades no frontend
