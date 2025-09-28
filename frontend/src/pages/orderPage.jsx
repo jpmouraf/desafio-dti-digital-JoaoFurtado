@@ -1,59 +1,71 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
-import OrderForm from "../components/orderForm";
 
-export default function OrdersPage() {
-  const [orders, setOrders] = useState([]);
+function OrderForm({ onCreated }) {
+  const [form, setForm] = useState({ x: "", y: "", weight: "", priority: "baixa" });
 
-  async function loadOrders() {
-    const res = await api.get("/orders");
-    setOrders(res.data);
+  function change(e) {
+    setForm({ ...form, [e.target.name]: e.target.value });
   }
 
-  useEffect(() => {
-    loadOrders();
-  }, []);
-
-  function getPriorityStyle(priority) {
-    switch (priority) {
-      case "alta": return "bg-red-100 text-red-700";
-      case "media": return "bg-yellow-100 text-yellow-700";
-      case "baixa": return "bg-green-100 text-green-700";
-      default: return "bg-gray-100 text-gray-700";
+  async function submit(e) {
+    e.preventDefault();
+    try {
+      await api.post("/orders", {
+        x: Number(form.x),
+        y: Number(form.y),
+        weight: Number(form.weight),
+        priority: form.priority
+      });
+      setForm({ x: "", y: "", weight: "", priority: "baixa" });
+      onCreated();
+    } catch (err) {
+      alert("Erro: " + (err?.response?.data?.erro || err.message));
     }
   }
 
   return (
-    <div className="min-h-screen bg-yellow-50 p-6">
-      <h2 className="text-3xl font-extrabold text-blue-800 mb-6 flex items-center gap-2">
-        📦 Pedidos
-      </h2>
+    <form onSubmit={submit} style={{ marginBottom: 12 }}>
+      <input name="x" placeholder="X" value={form.x} onChange={change} required style={{ width: 80 }} />
+      <input name="y" placeholder="Y" value={form.y} onChange={change} required style={{ width: 80, marginLeft: 6 }} />
+      <input name="weight" placeholder="Peso (kg)" value={form.weight} onChange={change} required style={{ width: 110, marginLeft: 6 }} />
+      <select name="priority" value={form.priority} onChange={change} style={{ marginLeft: 6 }}>
+        <option value="baixa">baixa</option>
+        <option value="media">media</option>
+        <option value="alta">alta</option>
+      </select>
+      <button type="submit" style={{ marginLeft: 8 }}>Criar Pedido</button>
+    </form>
+  );
+}
 
-      <OrderForm onCreated={loadOrders} />
+export default function OrdersPage() {
+  const [orders, setOrders] = useState([]);
+  const [refresh, setRefresh] = useState(0);
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
-        {orders.map((o) => (
-          <div
-            key={o.id}
-            className="bg-white shadow-lg rounded-2xl p-5 border border-gray-200 flex flex-col justify-between"
-          >
-            <h3 className="text-lg font-bold text-blue-700 mb-2">
-              Pedido #{o.id}
-            </h3>
-            <p><span className="font-semibold">📍 Local:</span> ({o.x}, {o.y})</p>
-            <p><span className="font-semibold">⚖️ Peso:</span> {o.weight}kg</p>
-            <p>
-              <span className="font-semibold">⭐ Prioridade:</span>{" "}
-              <span className={`px-2 py-1 rounded-lg text-sm font-medium ${getPriorityStyle(o.priority)}`}>
-                {o.priority}
-              </span>
-            </p>
-            <p className="mt-2">
-              <span className="font-semibold">📌 Status:</span> {o.status}
-            </p>
-          </div>
+  async function load() {
+    try {
+      const res = await api.get("/orders");
+      setOrders(res.data);
+    } catch (err) {
+      alert("Erro ao carregar pedidos: " + (err?.message || ""));
+    }
+  }
+
+  useEffect(() => { load(); }, [refresh]);
+
+  return (
+    <div>
+      <h2>Pedidos</h2>
+      <OrderForm onCreated={() => setRefresh(s => s + 1)} />
+      <button onClick={load} style={{ marginBottom: 8 }}>Atualizar lista</button>
+      <ul>
+        {orders.map(o => (
+          <li key={o.id}>
+            <strong>#{o.id}</strong> — ({o.x},{o.y}) — {o.weight}kg — {o.priority} — <em>{o.status}</em>
+          </li>
         ))}
-      </div>
+      </ul>
     </div>
   );
 }
