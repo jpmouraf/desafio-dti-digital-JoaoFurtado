@@ -27,20 +27,22 @@ A solução é composta por:
 
 Em um terminal:  
 
+```bash
 cd backend
 npm install
 npm run dev
-
+```
 O servidor estará disponível em: http://localhost:3000
 
 ### Frontend (React)
 
 Em um terminal: 
 
+```bash
 cd frontend
 npm install
 npm run dev
-
+```
 A interface estará disponível em: http://localhost:5173
 
 ### Testes
@@ -49,9 +51,10 @@ Os testes foram feitos com Jest + Supertest, cobrindo rotas principais de entreg
 Para rodar os testes:
 
 Em um terminal: 
-
+```bash
 cd backend
 npm test
+```
 
 ## Outras informações
 
