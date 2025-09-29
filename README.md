@@ -5,9 +5,10 @@ Este projeto tem como objetivo simular um sistema de entregas utilizando drones.
 A aplicação permite:  
 - Criar pedidos (com peso, posição e prioridade).  
 - Cadastrar drones (com limite de peso e distância).  
-- Alocar pedidos a drones e criar entregas.  
+- Alocar pedidos a drones e criar entregas.
+- Ao criar uma entrega, o controlador escolhe um drone e o sistema decide automaticamente quais são as melhores entregas para aquele drone (conforme as prioridades).    
 - Finalizar entregas, alterando o status de pedidos e drones.  
-- Gerar relatórios de entregas e distância percorrida.  
+- Gerar relatórios de entregas e distância percorrida.
 
 A solução é composta por:  
 - **Backend** em Node.js com Express.  
