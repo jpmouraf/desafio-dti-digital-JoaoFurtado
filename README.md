@@ -22,6 +22,11 @@ A solução é composta por:
 - npm (ou yarn).  
 
 ---
+### Clone o repositório:
+
+   ```bash
+   git clone https://github.com/jpmouraf/desafio-dti-digital-JoaoFurtado
+   ```
 
 ### Backend (API)  
 
